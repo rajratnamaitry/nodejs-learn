@@ -13,7 +13,10 @@ module.exports = {
         sidebar: 'auto',
         searchPlaceholder: 'Search...',
         nav: [
-          { text: 'Home', link: '/' }
+          { text: 'Home', link: '/' },
+          { text: 'Basics', link: '/topics/basics.html' },
+          { text: 'Express', link: '/topics/express.html' },
+          { text: 'Mongo DB', link: '/topics/mongodb.html' }
         ]
       }
 }
