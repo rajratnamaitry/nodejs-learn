@@ -1,8 +1,8 @@
 # nodejs-learn
 React Topics and Example with points
-- [Fundamentals of Nodejs](topics/basics.md)
-- [Express](topics/express.md)
-- [Mongo DB](topics/mongodb.md)
+- [Fundamentals of Nodejs](docs/topics/basics.md)
+- [Express](docs/topics/express.md)
+- [Mongo DB](docs/topics/mongodb.md)
 
 ## Run locally
 ```cmd
