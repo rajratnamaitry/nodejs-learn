@@ -48,13 +48,79 @@ Type of modules
 * Each file is a module that is isolated by default
 * To load a module into another file, we use the require function
 * Module exports
+Default export can be rename Or send object with predefined exports names
 * Module scope
+    * Each loaded module in nodejs is wrapped with an IIFE that provides prive scoping of code
+    * IIFE allows you to repeat variable or function names with any conflicts
 * Module Wrapper
+    * IIFE that wraps every module contains % parameters which are pretty important for the functioning of module
+```javascript
+// index.js
+(function(){
+    const superHero = 'Batman';
+    console.log(superHero)
+})
+// index.js after runing in node js
+(function(exports, require , module, __filename, __dirname){
+    // this how 'exports, require , module, __filename, __dirname' is accessable in files 
+    const superHero = 'Batman';
+    console.log(superHero)
+})
+```
 * Module Caching
-* Module Patterns
+When we require new module its `loaded and cached`. this will reuse cached module on redeclaring same module.
+```javascript
+// super-hero.js
+class SuperHero {
+    constructor(name) {
+        this.name = name;
+    }
+    getName () {
+       return this.name;
+    }
+    setName (val){
+        this.name = val
+    };
+
+}
+module.exports = new SuperHero('Batman');
+
+// index.js
+const superHero = require('./super-hero.js');
+console.log(superHero.getName());
+superHero.setName('Superman');
+console.log(superHero.getName());
+const superHero2 = require('./super-hero.js');
+console.log(superHero2.getName())
+
+// output
+// Batman
+// Superman
+// Superman
+```
+![runtime](/assets/cached.PNG)
 * Module.exports VS Exports
+exports is referance module.exports
+```javascript
+// math.js 
+// module.export
+const add = (a,b)=>a + b;
+const sub = (a,b)=>a - b;
+module.exports = {
+    add,
+    sub
+} 
+// export 
+// this will work
+exports.add = (a,b)=>a + b;
+exports.sub = (a,b)=>a - b;
+// this will not work (redefining module object).
+exports = {
+    add,
+    sub    
+}
+```
 * ES modules
-* Importing JSON and watch mode
 ### Build-in
 * Path
 ### Callback pattern
