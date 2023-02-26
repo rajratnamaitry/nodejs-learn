@@ -227,4 +227,25 @@ server.listen(3000,()=>{console.log('up and runing..')})
 | aapplication/zip | zip |
 | text/plain | text |
 | text/HTML | HTML |
+## Libuv and Async methods
+Async methods are handled by libuv
+## Thread pool
+![Thread pool](/assets/img/threadPool.PNG)
+default 4 and update the size of pool use process env
+```javascript
+process.env.UV_THREADPOOL_SIZE = 5
+```
+## Network I/O
+* https.request is a network input/output operation and not a CPU bound operation it does not use thread pool
+* Libuv instead delegates the work to OS kernel
+
+![Libuv](/assets/img/libuv.PNG)
+
+
+
+
+
+
+
+
 
