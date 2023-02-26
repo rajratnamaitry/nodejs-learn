@@ -11,7 +11,7 @@
 * Microtask queue
 * Call back / task queue
 * Event loop
-![runtime](/assets/chromeRuntime.PNG)
+![runtime](/assets/img/chromeRuntime.PNG)
 ## What is Nodejs ?
 * Open source : share and modification
 * Cross platform : Mac, window, linux
@@ -36,7 +36,7 @@ javascript not design for low level functionality file system and networking tha
 node/lib/fs.js is javascript code internally access C++ feature using libuv
 
 `Nodejs dont have Web api and DOM (No window or document) like Javascript`;
-![nodejs Runtime](/assets/nodejsRuntime.PNG)
+![nodejs Runtime](/assets/img/nodejsRuntime.PNG)
 
 ## Modules
 A module is encapsulated and reusable chuck of code that its 
@@ -98,7 +98,7 @@ console.log(superHero2.getName())
 // Superman
 // Superman
 ```
-![runtime](/assets/cached.PNG)
+![runtime](/assets/img/cached.PNG)
 * Module.exports VS Exports
 exports is referance module.exports
 ```javascript
@@ -121,8 +121,110 @@ exports = {
 }
 ```
 * ES modules
+    * Node.js 14 and above support ES modules
+    * Instead of module.exports, we use the export keyword
+    * The export can be default or named
+    * We import the exported variable or functions using the import keyword
 ### Build-in
-* Path
-### Callback pattern
+Modules that Node.s ships with also referred to core modules
+* path
+* events
+* fs
+* stream
+* http
 ### Event module
+An event is an action or an occurrence that has happend in our application that web can respond to
+```javascript
+const EventEmitter = require('node:events');
+const emitter =  new EventEmitter();
+emitter.on('trigger-event',(arg1,arg2)=>{
+    console.log('trigger-event called',arg1,arg2);
+})
+/*
+emitter.off(eventName, listener)
+emitter.on(eventName, listener)
+emitter.once(eventName, listener)
+emitter.prependListener(eventName, listener)
+emitter.prependOnceListener(eventName, listener)
+emitter.removeAllListeners([eventName])
+emitter.removeListener(eventName, listener)
+*/
+emitter.emit('trigger-event','arg1','arg2');
+```
 ### Extending from EventEmitter
+```javascript
+// user.js
+const EventEmitter = require('node:events');
+class User extends EventEmitter {
+    ....
+    getOrder () {
+        this.emit('order','arg1','arg2')
+    }
+}
+// index.js
+const userObj = new User();
+userObj.on('order',(arg1,arg2)=>{ console.log('order triggered',arg1,arg2) });
+```
+## fs module
+File system module
+### Sync and Async file operation
+```javascript
+const fs = require('node:fs');
+// Sync
+const fileContents = fs.readFileSync('./file.txt','utf-8');
+fs.writeFileSync('./file.txt','Hello World');
+// Async
+fs.readFile('./file.txt','utf-8',(error, data)=>{
+    console.log(error, data);
+});
+/**  fs.writeFileSync(<PATH>,<Contents>,<FLAGs>,()=>{}); */
+fs.writeFileSync('./file.txt','Hello World',(err)=>{console.log(err)});
+```
+### Streams
+A stream is a sequence of data that is being moved from one point to another over time.
+```javascript
+const fs = require('node:fs');
+
+const readableStream = fs.createReadStream('./file.txt',{
+    encoding : 'utf-8',
+    highWaterMark: 2 // send data in 2 chunks at time
+})
+const writeableStream = fs.createWriteStream('./file2.txt')
+readableStream.on('data',(chunk)=>{
+    writeableStream.write(chunk)
+})
+```
+### Pipe
+```javascript
+const fs = require('node:fs');
+const zlib = require('node:zlib')
+const gzip = zlib.createGzip()
+
+const readableStream = fs.createReadStream('./file.txt',{
+    encoding : 'utf-8',
+    highWaterMark: 2 // send data in 2 chunks at time
+})
+
+readableStream.pipe(gzip).pipe(fs.WriteStream('./file2.txt.gz'));
+
+const writeableStream = fs.createWriteStream('./file2.txt');
+readableStream.pipe(writeableStream);
+```
+## Creating a node server
+http moodule in-build
+```javascript
+const http = require('node:http');
+const server = http.createServer((req,res)=>{
+    res.writeHead(200,{ "Content-Type": "text/plain"});
+    res.end('hello world')
+})
+server.listen(3000,()=>{console.log('up and runing..')})
+```
+| Content-type | value |
+|---|---|
+| application/json | json |
+| aapplication/pdf | pdf |
+| aapplication/zip | zip |
+| text/plain | text |
+| text/HTML | HTML |
+
