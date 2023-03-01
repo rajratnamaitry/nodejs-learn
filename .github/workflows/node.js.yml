@@ -18,5 +18,8 @@ jobs:
     - name: Build and Deploy
       uses: testthedocs/github-pages-deploy-action@master
       env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        TARGET_REPO: rajratnamaitry/nodejs-learn
+        TARGET_BRANCH: master
         BUILD_DIR: docs/.vuepress/dist/ # The folder, the action should deploy.
         BUILD_SCRIPT: npm install && npm run deploy # The build script the action should run prior to deploying.
