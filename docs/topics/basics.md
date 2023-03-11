@@ -11,7 +11,7 @@
 * Microtask queue
 * Call back / task queue
 * Event loop
-![runtime](/assets/img/chromeRuntime.PNG)
+![runtime](https://raw.githubusercontent.com/rajratnamaitry/nodejs-learn/master/docs/.vuepress/public/assets/img/chromeRuntime.PNG)
 ## What is Nodejs ?
 * Open source : share and modification
 * Cross platform : Mac, window, linux
@@ -36,7 +36,7 @@ javascript not design for low level functionality file system and networking tha
 node/lib/fs.js is javascript code internally access C++ feature using libuv
 
 `Nodejs dont have Web api and DOM (No window or document) like Javascript`;
-![nodejs Runtime](/assets/img/nodejsRuntime.PNG)
+![nodejs Runtime](https://raw.githubusercontent.com/rajratnamaitry/nodejs-learn/master/docs/.vuepress/public/assets/img/nodejsRuntime.PNG)
 
 ## Modules
 A module is encapsulated and reusable chuck of code that its 
@@ -98,7 +98,7 @@ console.log(superHero2.getName())
 // Superman
 // Superman
 ```
-![runtime](/assets/img/cached.PNG)
+![runtime](https://raw.githubusercontent.com/rajratnamaitry/nodejs-learn/master/docs/.vuepress/public/assets/img/cached.PNG)
 * Module.exports VS Exports
 exports is referance module.exports
 ```javascript
@@ -230,7 +230,7 @@ server.listen(3000,()=>{console.log('up and runing..')})
 ## Libuv and Async methods
 Async methods are handled by libuv
 ## Thread pool
-![Thread pool](/assets/img/threadPool.PNG)
+![Thread pool](https://raw.githubusercontent.com/rajratnamaitry/nodejs-learn/master/docs/.vuepress/public/assets/img/threadPool.PNG)
 default 4 and update the size of pool use process env
 ```javascript
 process.env.UV_THREADPOOL_SIZE = 5
@@ -239,13 +239,37 @@ process.env.UV_THREADPOOL_SIZE = 5
 * https.request is a network input/output operation and not a CPU bound operation it does not use thread pool
 * Libuv instead delegates the work to OS kernel
 
-![Libuv](/assets/img/libuv.PNG)
+![Libuv](https://raw.githubusercontent.com/rajratnamaitry/nodejs-learn/master/docs/.vuepress/public/assets/img/libuv.PNG)
 
-
-
-
-
-
-
-
-
+## Cluster
+Cluster master is controller of worker
+```javascript
+const cluster = require('node:cluster');
+const os = require('node:os');
+console.log('CUPs', os.cpus().length)
+if(cluster.isMaster){
+    console.log('Master process '+ process.pid)
+    cluster.fork();
+    cluster.fork();
+} else {
+    console.log('Worker process '+ process.pid)
+}
+```
+We should only create as many workers as there are CPU cores on machine
+## Worker Threads Modules
+* The worker_threads module enables the use of threads that execute javascript in parallel.
+* Code executed in worker thread runs in a separate child process, preventing it from blocking your main application
+* The cluster module can be used to run multiple instance of node.js that can distribute workloads
+* worker_threads modules allows runing multiple application threads within a single node instance.
+```javascript
+// index.js
+const { Worker } = require('node:worker_threads');
+const worker = new Worker('./worker-thread.js');
+worker.on('message',()=>{
+    // on event trigger do actions
+})
+// worker-thread.js
+const { parentPort } =  require('node:worker_threads');
+// time taking operations
+parentPort.postMessage(arg)
+```
